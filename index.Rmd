@@ -1,0 +1,329 @@
+---
+title: "#AEET2021 Tweets"
+output:
+  flexdashboard::flex_dashboard:
+    self_contained: FALSE
+    vertical_layout: scroll
+    source_code: https://github.com/Pakillo/tweets_AEET2021
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, cache = FALSE)
+```
+
+```{r pkgs}
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(flexdashboard)
+source("R/print_tweet.R")
+source("R/top.R")
+source("R/wordcloud.R")
+library(tweetrmd)
+```
+
+```{r read_tweets}
+# tweets <- readRDS("tweets.rds")
+```
+
+Home {data-orientation=rows}
+=============================
+
+
+
+Row
+-----------------------
+
+### Chart 1
+
+```{r box_ntweets}
+valueBox(value = nrow(tweets), caption = "Tweets", icon = "fa-comment")
+```
+
+
+### Chart 2
+
+```{r box_ntweeters}
+valueBox(value = length(unique(tweets$user_id)), caption = "Tweeters", icon = "fa-user")
+```
+
+
+### Chart 3
+
+```{r box_nlikes}
+valueBox(value = sum(tweets$favorite_count), caption = "Likes", icon = "fa-heart")
+```
+
+
+### Chart 4
+
+```{r box_nRT}
+valueBox(value = sum(tweets$retweet_count), caption = "Retweets", icon = "fa-retweet")
+```
+
+
+
+Row
+-----------------------------
+
+### 
+
+```{r timeplot, out.width='100%'}
+timeplot <- rtweet::ts_plot(tweets, by = "hours", tz = "Europe/Madrid") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(face = "bold")) +
+  labs(x = NULL, y = "Number of tweets", title = "Tweets per hour")
+#timeplot
+ggplotly(timeplot)
+```
+
+
+Row
+-----------------------------
+
+### `r #icon::fontawesome("heart")` MOST LIKED 
+
+```{r tw_mostliked, results='asis'}
+ml <- tweets_most_liked(tweets, n = 1)
+print_tweet(ml)
+# tweet_embed(tweet_url(screen_name = ml$user_id, status_id = ml$status_id))
+```
+
+### `r #icon::fontawesome("retweet")` MOST RETWEETED
+
+```{r tw_mostRT, results='asis'}
+mrt <- tweets_most_RT(tweets, n = 1)
+print_tweet(mrt)
+# tweet_embed(tweet_url(screen_name = mrt$user_id, status_id = mrt$status_id))
+```
+
+
+### `r #icon::fontawesome("clock")` MOST RECENT
+
+```{r tw_mostrecent, results='asis'}
+mrecent <- tweets_most_recent(tweets, n = 1)
+print_tweet(mrecent)
+# include_tweet(tweet_url(screen_name = mrecent$user_id, status_id = mrecent$status_id))
+```
+
+
+
+
+
+
+
+Top tweets 
+======================================
+
+
+```{r ntw_print}
+n = 20
+```
+
+Column
+------------------------
+
+*** **MOST LIKED** ***
+
+```{r print_mostliked}
+ml <- tweets_most_liked(tweets, n)
+#cat("\n\n### MOST LIKED\n\n.\n\n")
+for (i in seq_len(n)) {
+  # cat("\n\n### \n\n")
+  # print_tweet(ml[i, ])
+  # tweet_embed(tweet_url(screen_name = ml$user_id[i], status_id = ml$status_id[i]))
+}
+tweet_embed(tweet_url(screen_name = ml$user_id[1], status_id = ml$status_id[1]))
+tweet_embed(tweet_url(screen_name = ml$user_id[2], status_id = ml$status_id[2]))
+tweet_embed(tweet_url(screen_name = ml$user_id[3], status_id = ml$status_id[3]))
+tweet_embed(tweet_url(screen_name = ml$user_id[4], status_id = ml$status_id[4]))
+tweet_embed(tweet_url(screen_name = ml$user_id[5], status_id = ml$status_id[5]))
+tweet_embed(tweet_url(screen_name = ml$user_id[6], status_id = ml$status_id[6]))
+tweet_embed(tweet_url(screen_name = ml$user_id[7], status_id = ml$status_id[7]))
+# tweet_embed(tweet_url(screen_name = ml$user_id[8], status_id = ml$status_id[8]))
+
+```
+
+
+
+Column
+------------------------
+
+*** **MOST RETWEETED** ***
+
+```{r print_mostRT, results='asis'}
+ml <- tweets_most_RT(tweets, n)
+#cat("\n\n### MOST RETWEETED\n\n.\n\n")
+for (i in seq_len(n)) {
+  cat("\n\n### \n\n")
+  print_tweet(ml[i, ])
+}
+```
+
+
+
+Column
+-------------------------
+
+*** **MOST RECENT** ***
+
+
+```{r print_mostrecent, results='asis'}
+ml <- tweets_most_recent(tweets, n)
+#cat("\n\n### MOST RECENT\n\n.\n\n")
+for (i in seq_len(n)) {
+  cat("\n\n### \n\n")
+  print_tweet(ml[i, ])
+}
+```
+
+
+
+
+Top tweeters 
+=====================
+
+```{r ntweeters_plots}
+n = 25
+```
+
+
+Column
+---------------
+
+### MOST ACTIVE
+
+```{r tweeters_mostactive, fig.height=6}
+most.active <- users_most_active(tweets, n)
+ggplot(most.active) + 
+  aes(reorder(screen_name, ntweets), ntweets) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Tweeter", y = "Number of tweets") +
+  theme_minimal(base_size = 15)
+```
+
+Column
+-------------------
+
+### MOST LIKED
+
+```{r tweeters_mostliked, fig.height=6}
+most.liked <- users_most_liked(tweets, n)
+ggplot(most.liked) + 
+  aes(reorder(screen_name, nlikes), nlikes) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Tweeter", y = "Number of likes") +
+  theme_minimal(base_size = 15)
+```
+
+
+Column
+--------------
+
+
+### MOST RETWEETED
+
+```{r tweeters_mostRT, fig.height=6}
+most.rt <- users_most_RT(tweets, n)
+ggplot(most.rt) + 
+  aes(reorder(screen_name, nrt), nrt) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Tweeter", y = "Number of RT") +
+  theme_minimal(base_size = 15)
+```
+
+
+
+
+
+
+Top words
+=======================
+
+### Wordcloud {.no-title .no-mobile}
+
+```{r cloud_words, fig.width=8, fig.height=8}
+wordcloud(tweets, "words", min_count = 5, min_size = 1, max_words = 100)
+```
+
+### Wordcloud {.no-title .mobile}
+
+```{r cloud_words_mob}
+wordcloud(tweets, "words", min_count = 5, min_size = 0.5, max_words = 30)
+```
+
+
+
+
+Top hashtags
+====================
+
+### Wordcloud {.no-title .no-mobile}
+
+```{r cloud_hashtags, fig.width=8, fig.height=8}
+wordcloud(tweets, "hashtags", min_count = 2, min_size = 1, max_words = 70)
+```
+
+### Wordcloud {.no-title .mobile}
+
+```{r cloud_hashtags_mob}
+wordcloud(tweets, "hashtags", min_count = 2, min_size = 0.5, max_words = 30)
+```
+
+
+
+Top mentions
+====================
+
+### Wordcloud {.no-title .no-mobile}
+
+```{r cloud_mentions, fig.width=8, fig.height=8}
+wordcloud(tweets, "mentions", min_count = 2, min_size = 1, max_words = 70)
+```
+
+### Wordcloud {.no-title .mobile}
+
+```{r cloud_mentions_mob}
+wordcloud(tweets, "mentions", min_count = 2, min_size = 0.5, max_words = 30)
+```
+
+
+
+
+All tweets
+=====================
+
+### Explore all tweets
+
+
+
+```{r prepareDT}
+
+twits <- tweets %>%
+  dplyr::select(created_at, screen_name, text, retweet_count, favorite_count, status_url) %>%
+  rename(Timestamp = created_at, 
+         User = screen_name, 
+         Tweet = text, 
+         RT = retweet_count, 
+         Fav = favorite_count) %>%
+  mutate(Timestamp = paste("<a href='", status_url, "'", ' target="_blank">', 
+                            as.character(Timestamp), "</a>", sep = "")) %>%
+  dplyr::select(-status_url) %>%
+  arrange(desc(RT), desc(Fav))
+```
+
+
+
+
+```{r alltwDT}
+DT::datatable(twits, escape = FALSE, filter = "top",
+              options = list(pageLength = 10))
+```
+
+
+
+
+
