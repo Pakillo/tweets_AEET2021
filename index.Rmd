@@ -5,6 +5,7 @@ output:
     self_contained: FALSE
     vertical_layout: scroll
     source_code: https://github.com/Pakillo/tweets_AEET2021
+    theme: flatly
 ---
 
 ```{r setup, include=FALSE}
