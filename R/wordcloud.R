@@ -20,18 +20,20 @@ wordcloud <- function(df, show, ...) {
 
 
 
-  words <- quanteda::dfm(vec,
-                        remove = toremove,
-                        remove_punct = TRUE,
-                        remove_twitter = TRUE,
-                        remove_numbers = TRUE,
-                        remove_url = TRUE)
+  words <- vec %>%
+    quanteda::tokens(
+      remove_punct = TRUE,
+      remove_symbols = TRUE,
+      remove_numbers = TRUE,
+      remove_url = TRUE) %>%
+    quanteda::tokens_remove(toremove) %>%
+    quanteda::dfm()
 
-  quanteda::textplot_wordcloud(words, #min_count = min.count,
-                               random_order = FALSE,
-                               rotation = .25,
-                               color = RColorBrewer::brewer.pal(8,"Dark2"),
-                               ...)
+  quanteda.textplots::textplot_wordcloud(words, #min_count = min.count,
+                                         random_order = FALSE,
+                                         rotation = .25,
+                                         color = RColorBrewer::brewer.pal(8,"Dark2"),
+                                         ...)
 
 }
 
