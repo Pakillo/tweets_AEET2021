@@ -6,7 +6,8 @@ system("gathertweet update")   # update tweets data
 library(dplyr)
 tweets <- readRDS("tweets.rds")
 ## add filters here
-# saveRDS(tweets, "tweets.rds")
+tweets <- tweets %>%
+  filter(user_id != "202845570")
 
 rmarkdown::render(input = "index.Rmd")
 

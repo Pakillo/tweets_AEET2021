@@ -1,5 +1,5 @@
 ---
-title: "#AEET2021 Tweets"
+title: "#AEET2021 tweets"
 output:
   flexdashboard::flex_dashboard:
     self_contained: FALSE
@@ -78,32 +78,52 @@ ggplotly(timeplot)
 ```
 
 
-Row
------------------------------
 
-### `r #icon::fontawesome("heart")` MOST LIKED 
 
-```{r tw_mostliked, results='asis'}
+Row 
+------------------------------
+
+```{r out.width="100%"}
+
 ml <- tweets_most_liked(tweets, n = 1)
-print_tweet(ml)
-# tweet_embed(tweet_url(screen_name = ml$user_id, status_id = ml$status_id))
-```
-
-### `r #icon::fontawesome("retweet")` MOST RETWEETED
-
-```{r tw_mostRT, results='asis'}
 mrt <- tweets_most_RT(tweets, n = 1)
-print_tweet(mrt)
-# tweet_embed(tweet_url(screen_name = mrt$user_id, status_id = mrt$status_id))
+mrecent <- tweets_most_recent(tweets, n = 1)
+
+df <- data.frame(ml = tweet_embed(tweet_url(screen_name = ml$user_id, status_id = ml$status_id),
+                                  hide_thread = TRUE, plain = TRUE), 
+                 mrt = tweet_embed(tweet_url(screen_name = mrt$user_id, status_id = mrt$status_id), 
+                                   hide_thread = TRUE, plain = TRUE), 
+                 mrecent = tweet_embed(tweet_url(screen_name = mrecent$user_id, status_id = mrecent$status_id),
+                                       hide_thread = TRUE, plain = TRUE))
+
+knitr::kable(df, format = "html", escape = FALSE, 
+             col.names = c("MOST LIKED", "MOST RETWEETED", "MOST RECENT"),
+             align = "c")
 ```
 
 
-### `r #icon::fontawesome("clock")` MOST RECENT
 
-```{r tw_mostrecent, results='asis'}
+
+```{r tw_mostliked, eval=FALSE}
+
+ml <- tweets_most_liked(tweets, n = 1)
+# print_tweet(ml)
+tweet_embed(tweet_url(screen_name = ml$user_id, status_id = ml$status_id),
+            hide_thread = TRUE, plain = TRUE)
+```
+
+```{r tw_mostRT, eval=FALSE}
+mrt <- tweets_most_RT(tweets, n = 1)
+# print_tweet(mrt)
+tweet_embed(tweet_url(screen_name = mrt$user_id, status_id = mrt$status_id),
+            hide_thread = TRUE, plain = TRUE)
+```
+
+```{r tw_mostrecent, eval=FALSE}
 mrecent <- tweets_most_recent(tweets, n = 1)
-print_tweet(mrecent)
-# include_tweet(tweet_url(screen_name = mrecent$user_id, status_id = mrecent$status_id))
+# print_tweet(mrecent)
+include_tweet(tweet_url(screen_name = mrecent$user_id, status_id = mrecent$status_id),
+              hide_thread = TRUE, plain = TRUE)
 ```
 
 
@@ -117,7 +137,7 @@ Top tweets
 
 
 ```{r ntw_print}
-n = 20
+n = 3
 ```
 
 Column
@@ -127,20 +147,23 @@ Column
 
 ```{r print_mostliked}
 ml <- tweets_most_liked(tweets, n)
+
 #cat("\n\n### MOST LIKED\n\n.\n\n")
-for (i in seq_len(n)) {
+
+# for (i in seq_len(n)) {
   # cat("\n\n### \n\n")
   # print_tweet(ml[i, ])
-  # tweet_embed(tweet_url(screen_name = ml$user_id[i], status_id = ml$status_id[i]))
+  # 
+# }
+
+tweet_embed_many <- function(i, df) {
+  tweet_embed(tweet_url(screen_name = df$user_id[i], status_id = df$status_id[i]),
+              plain = FALSE, hide_thread = TRUE)
 }
-tweet_embed(tweet_url(screen_name = ml$user_id[1], status_id = ml$status_id[1]))
-tweet_embed(tweet_url(screen_name = ml$user_id[2], status_id = ml$status_id[2]))
-tweet_embed(tweet_url(screen_name = ml$user_id[3], status_id = ml$status_id[3]))
-tweet_embed(tweet_url(screen_name = ml$user_id[4], status_id = ml$status_id[4]))
-tweet_embed(tweet_url(screen_name = ml$user_id[5], status_id = ml$status_id[5]))
-tweet_embed(tweet_url(screen_name = ml$user_id[6], status_id = ml$status_id[6]))
-tweet_embed(tweet_url(screen_name = ml$user_id[7], status_id = ml$status_id[7]))
-# tweet_embed(tweet_url(screen_name = ml$user_id[8], status_id = ml$status_id[8]))
+
+htmltools::tagList(
+  lapply(1:n, tweet_embed_many, df = ml)
+)
 
 ```
 
@@ -151,13 +174,13 @@ Column
 
 *** **MOST RETWEETED** ***
 
-```{r print_mostRT, results='asis'}
-ml <- tweets_most_RT(tweets, n)
-#cat("\n\n### MOST RETWEETED\n\n.\n\n")
-for (i in seq_len(n)) {
-  cat("\n\n### \n\n")
-  print_tweet(ml[i, ])
-}
+```{r print_mostRT}
+mrt <- tweets_most_RT(tweets, n)
+
+htmltools::tagList(
+  lapply(1:n, tweet_embed_many, df = mrt)
+)
+
 ```
 
 
@@ -168,13 +191,13 @@ Column
 *** **MOST RECENT** ***
 
 
-```{r print_mostrecent, results='asis'}
-ml <- tweets_most_recent(tweets, n)
-#cat("\n\n### MOST RECENT\n\n.\n\n")
-for (i in seq_len(n)) {
-  cat("\n\n### \n\n")
-  print_tweet(ml[i, ])
-}
+```{r print_mostrecent}
+mrecent <- tweets_most_recent(tweets, n)
+
+htmltools::tagList(
+  lapply(1:n, tweet_embed_many, df = mrecent)
+)
+
 ```
 
 
@@ -245,13 +268,13 @@ Top words
 
 ### Wordcloud {.no-title .no-mobile}
 
-```{r cloud_words, fig.width=8, fig.height=8}
+```{r cloud_words, fig.width=8, fig.height=8, eval=FALSE}
 wordcloud(tweets, "words", min_count = 5, min_size = 1, max_words = 100)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
-```{r cloud_words_mob}
+```{r cloud_words_mob, eval=FALSE}
 wordcloud(tweets, "words", min_count = 5, min_size = 0.5, max_words = 30)
 ```
 
@@ -263,13 +286,13 @@ Top hashtags
 
 ### Wordcloud {.no-title .no-mobile}
 
-```{r cloud_hashtags, fig.width=8, fig.height=8}
+```{r cloud_hashtags, fig.width=8, fig.height=8, eval=FALSE}
 wordcloud(tweets, "hashtags", min_count = 2, min_size = 1, max_words = 70)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
-```{r cloud_hashtags_mob}
+```{r cloud_hashtags_mob, eval=FALSE}
 wordcloud(tweets, "hashtags", min_count = 2, min_size = 0.5, max_words = 30)
 ```
 
@@ -280,13 +303,13 @@ Top mentions
 
 ### Wordcloud {.no-title .no-mobile}
 
-```{r cloud_mentions, fig.width=8, fig.height=8}
+```{r cloud_mentions, fig.width=8, fig.height=8, eval=FALSE}
 wordcloud(tweets, "mentions", min_count = 2, min_size = 1, max_words = 70)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
-```{r cloud_mentions_mob}
+```{r cloud_mentions_mob, eval=FALSE}
 wordcloud(tweets, "mentions", min_count = 2, min_size = 0.5, max_words = 30)
 ```
 
@@ -296,7 +319,7 @@ wordcloud(tweets, "mentions", min_count = 2, min_size = 0.5, max_words = 30)
 All tweets
 =====================
 
-### Explore all tweets
+### Explore all tweets 
 
 
 
