@@ -67,7 +67,7 @@ valueBox(value = sum(tweets$retweet_count), caption = "Retweets", icon = "fa-ret
 Row
 -----------------------------
 
-```{r timeplot, fig.width = 17, fig.height = 4.5}
+```{r timeplot, fig.width = 17, fig.height = 4, out.width="100%"}
 timeplot <- rtweet::ts_plot(tweets, by = "hours", tz = "Europe/Madrid") +
   theme_minimal(base_size = 14) +
   theme(plot.title = element_text(face = "bold")) +
