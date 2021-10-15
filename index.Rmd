@@ -67,15 +67,13 @@ valueBox(value = sum(tweets$retweet_count), caption = "Retweets", icon = "fa-ret
 Row
 -----------------------------
 
-### 
-
-```{r timeplot, out.width='100%'}
+```{r timeplot, fig.width = 17, fig.height = 4.5}
 timeplot <- rtweet::ts_plot(tweets, by = "hours", tz = "Europe/Madrid") +
   theme_minimal(base_size = 14) +
   theme(plot.title = element_text(face = "bold")) +
   labs(x = NULL, y = "Number of tweets", title = "Tweets per hour")
-#timeplot
-ggplotly(timeplot)
+timeplot
+# ggplotly(timeplot)
 ```
 
 
@@ -138,7 +136,7 @@ Top tweets
 
 
 ```{r ntw_print}
-n = 3
+n = 10
 ```
 
 Column
@@ -269,14 +267,16 @@ Top words
 
 ### Wordcloud {.no-title .no-mobile}
 
-```{r cloud_words, fig.width=8, fig.height=8, eval=FALSE}
-wordcloud(tweets, "words", min_count = 5, min_size = 1, max_words = 100)
+```{r cloud_words, fig.width=8, fig.height=8}
+wordcloud(tweets, "words", remove = c("congreso", "XV", "#AEET2021"), 
+          min_count = 5, min_size = 1, max_words = 100)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
-```{r cloud_words_mob, eval=FALSE}
-wordcloud(tweets, "words", min_count = 5, min_size = 0.5, max_words = 30)
+```{r cloud_words_mob}
+wordcloud(tweets, "words", remove = c("congreso", "XV", "#AEET2021"), 
+          min_count = 5, min_size = 0.5, max_words = 30)
 ```
 
 
@@ -287,14 +287,16 @@ Top hashtags
 
 ### Wordcloud {.no-title .no-mobile}
 
-```{r cloud_hashtags, fig.width=8, fig.height=8, eval=FALSE}
-wordcloud(tweets, "hashtags", min_count = 2, min_size = 1, max_words = 70)
+```{r cloud_hashtags, fig.width=8, fig.height=8}
+wordcloud(tweets, "hashtags", remove = c("congreso", "XV"), 
+          min_count = 2, min_size = 1, max_words = 70)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
-```{r cloud_hashtags_mob, eval=FALSE}
-wordcloud(tweets, "hashtags", min_count = 2, min_size = 0.5, max_words = 30)
+```{r cloud_hashtags_mob}
+wordcloud(tweets, "hashtags", remove = c("congreso", "XV"), 
+          min_count = 2, min_size = 0.5, max_words = 30)
 ```
 
 
@@ -304,24 +306,23 @@ Top mentions
 
 ### Wordcloud {.no-title .no-mobile}
 
-```{r cloud_mentions, fig.width=8, fig.height=8, eval=FALSE}
-wordcloud(tweets, "mentions", min_count = 2, min_size = 1, max_words = 70)
+```{r cloud_mentions, fig.width=8, fig.height=8}
+wordcloud(tweets, "mentions", remove = c("congreso", "XV"), 
+          min_count = 2, min_size = 1, max_words = 70)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
-```{r cloud_mentions_mob, eval=FALSE}
-wordcloud(tweets, "mentions", min_count = 2, min_size = 0.5, max_words = 30)
+```{r cloud_mentions_mob}
+wordcloud(tweets, "mentions", remove = c("congreso", "XV"), 
+          min_count = 2, min_size = 0.5, max_words = 30)
 ```
 
 
 
 
-All tweets
+All tweets 
 =====================
-
-### Explore all tweets 
-
 
 
 ```{r prepareDT}
@@ -341,10 +342,9 @@ twits <- tweets %>%
 
 
 
-
-```{r alltwDT}
+```{r alltwDT, out.width="100%"}
 DT::datatable(twits, escape = FALSE, filter = "top",
-              options = list(pageLength = 10))
+              options = list(pageLength = 10, scrollY = 600))
 ```
 
 

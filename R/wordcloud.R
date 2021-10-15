@@ -1,8 +1,9 @@
-wordcloud <- function(df, show, ...) {
+wordcloud <- function(df, show, remove, ...) {
 
   toremove <- c(quanteda::stopwords("en"),
                 quanteda::stopwords("es"),
-                "http", "https", "t.co")
+                "http", "https", "t.co",
+                remove)
 
   if (show == "words") {
     vec <- df$text
