@@ -131,7 +131,7 @@ include_tweet(tweet_url(screen_name = mrecent$user_id, status_id = mrecent$statu
 ```
 
 
-
+Last update: `r Sys.time()`
 
 
 
@@ -329,6 +329,7 @@ wordcloud(tweets, "mentions", remove = c("congreso", "XV"),
 All tweets 
 =====================
 
+Here you can search by tweeter, keywords, etc.
 
 ```{r prepareDT}
 
