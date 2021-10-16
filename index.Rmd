@@ -363,8 +363,6 @@ wordcloud(tweets, "mentions", remove = c("congreso", "XV"),
 All tweets 
 =====================
 
-Here you can search by tweeter, keywords, etc.
-
 ```{r prepareDT}
 
 twits <- tweets %>%
