@@ -67,9 +67,9 @@ valueBox(value = sum(tweets$retweet_count), caption = "Retweets", icon = "fa-ret
 Row
 -----------------------------
 
-### 
+### {.no-mobile}
 
-```{r timeplot, out.width="100%"}
+```{r timeplot_plotly, out.width="100%"}
 timeplot <- rtweet::ts_plot(tweets, by = "hours", tz = "Europe/Madrid") +
   theme_minimal(base_size = 14) +
   theme(plot.title = element_text(face = "bold")) +
@@ -79,20 +79,31 @@ ggplotly(timeplot)
 ```
 
 
+### {.mobile}
+
+```{r timeplot, out.width="100%"}
+timeplot <- rtweet::ts_plot(tweets, by = "hours", tz = "Europe/Madrid") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(face = "bold")) +
+  labs(x = NULL, y = "Number of tweets", title = "Tweets per hour")
+timeplot
+# ggplotly(timeplot)
+```
 
 
 Row 
 ------------------------------
 
-### 
-
-
-```{r out.width="100%"}
-
+```{r}
 ml <- tweets_most_liked(tweets, n = 1)
 mrt <- tweets_most_RT(tweets, n = 1)
 mrecent <- tweets_most_recent(tweets, n = 1)
+```
 
+
+### {.no-mobile}
+
+```{r out.width="100%", eval=T}
 df <- data.frame(ml = tweet_embed(tweet_url(screen_name = ml$user_id, status_id = ml$status_id),
                                   hide_thread = TRUE, plain = TRUE), 
                  mrt = tweet_embed(tweet_url(screen_name = mrt$user_id, status_id = mrt$status_id), 
@@ -106,30 +117,53 @@ knitr::kable(df, format = "html", escape = FALSE,
 ```
 
 
+### {.mobile}
+
+```{r out.width="100%", eval=T}
+df <- data.frame(Tweets = c("MOST LIKED", 
+                            tweet_embed(tweet_url(screen_name = ml$user_id, status_id = ml$status_id),
+                                  hide_thread = TRUE, plain = TRUE), 
+                            "MOST RETWEETED", 
+                            tweet_embed(tweet_url(screen_name = mrt$user_id, status_id = mrt$status_id), 
+                                   hide_thread = TRUE, plain = TRUE), 
+                            "MOST RECENT",
+                            tweet_embed(tweet_url(screen_name = mrecent$user_id, status_id = mrecent$status_id),
+                                       hide_thread = TRUE, plain = TRUE)))
+
+knitr::kable(df, format = "html", escape = FALSE, 
+             col.names = c("Tweets"),
+             align = "c")
+```
 
 
-```{r tw_mostliked, eval=FALSE}
-
-ml <- tweets_most_liked(tweets, n = 1)
+```{r tw_mostliked, eval=F}
 # print_tweet(ml)
 tweet_embed(tweet_url(screen_name = ml$user_id, status_id = ml$status_id),
             hide_thread = TRUE, plain = TRUE)
 ```
 
-```{r tw_mostRT, eval=FALSE}
-mrt <- tweets_most_RT(tweets, n = 1)
+
+
+
+```{r tw_mostRT, eval=F}
 # print_tweet(mrt)
 tweet_embed(tweet_url(screen_name = mrt$user_id, status_id = mrt$status_id),
             hide_thread = TRUE, plain = TRUE)
 ```
 
-```{r tw_mostrecent, eval=FALSE}
-mrecent <- tweets_most_recent(tweets, n = 1)
+
+
+
+```{r tw_mostrecent, eval=F}
 # print_tweet(mrecent)
 include_tweet(tweet_url(screen_name = mrecent$user_id, status_id = mrecent$status_id),
               hide_thread = TRUE, plain = TRUE)
 ```
 
+
+
+Row
+------------------------
 
 Last update: `r Sys.time()`
 
@@ -141,7 +175,7 @@ Top tweets
 
 
 ```{r ntw_print}
-n = 10
+n = 3
 ```
 
 Column
