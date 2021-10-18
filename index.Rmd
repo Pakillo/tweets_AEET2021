@@ -175,7 +175,7 @@ Top tweets
 
 
 ```{r ntw_print}
-n = 3
+n = 20
 ```
 
 Column
@@ -307,14 +307,14 @@ Top words
 ### Wordcloud {.no-title .no-mobile}
 
 ```{r cloud_words, fig.width=8, fig.height=8}
-wordcloud(tweets, "words", remove = c("congreso", "XV", "#AEET2021"), 
+wordcloud(tweets, "words", remove = remove.words, 
           min_count = 5, min_size = 1, max_words = 100)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
 ```{r cloud_words_mob}
-wordcloud(tweets, "words", remove = c("congreso", "XV", "#AEET2021"), 
+wordcloud(tweets, "words", remove = remove.words, 
           min_count = 5, min_size = 0.5, max_words = 30)
 ```
 
@@ -327,14 +327,14 @@ Top hashtags
 ### Wordcloud {.no-title .no-mobile}
 
 ```{r cloud_hashtags, fig.width=8, fig.height=8}
-wordcloud(tweets, "hashtags", remove = c("congreso", "XV"), 
+wordcloud(tweets, "hashtags", remove = remove.hashtags, 
           min_count = 2, min_size = 1, max_words = 70)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
 ```{r cloud_hashtags_mob}
-wordcloud(tweets, "hashtags", remove = c("congreso", "XV"), 
+wordcloud(tweets, "hashtags", remove = remove.hashtags, 
           min_count = 2, min_size = 0.5, max_words = 30)
 ```
 
@@ -346,14 +346,14 @@ Top mentions
 ### Wordcloud {.no-title .no-mobile}
 
 ```{r cloud_mentions, fig.width=8, fig.height=8}
-wordcloud(tweets, "mentions", remove = c("congreso", "XV"), 
+wordcloud(tweets, "mentions", remove = remove.mentions, 
           min_count = 2, min_size = 1, max_words = 70)
 ```
 
 ### Wordcloud {.no-title .mobile}
 
 ```{r cloud_mentions_mob}
-wordcloud(tweets, "mentions", remove = c("congreso", "XV"), 
+wordcloud(tweets, "mentions", remove = remove.mentions, 
           min_count = 2, min_size = 0.5, max_words = 30)
 ```
 

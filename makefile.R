@@ -1,12 +1,9 @@
 
+library("dplyr")
+
 gathertweet::gathertweet_search("#AEET2021")  # get new tweets
 gathertweet::gathertweet_update() # update tweets data
 
-# system("gathertweet search '#AEET2021'")
-# system("gathertweet update")
-
-
-library(dplyr)
 
 tweets <- readRDS("tweets.rds")
 
@@ -14,6 +11,14 @@ tweets <- readRDS("tweets.rds")
 tweets <- tweets %>%
   filter(user_id != "202845570")
 
+
+#### words to remove from each wordcloud
+remove.words <- c("congreso", "XV", "#AEET2021", "@_aeet_")
+remove.hashtags <- c("congreso", "XV")
+remove.mentions <- c("congreso", "XV")
+
+
+## Render
 rmarkdown::render(input = "index.Rmd")
 
 
