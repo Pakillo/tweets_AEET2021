@@ -14,7 +14,7 @@ tweets <- tweets %>%
 
 #### words to remove from each wordcloud
 remove.words <- c("congreso", "XV", "#AEET2021",
-                  "@_aeet_", "@_sara_varela", "vgalaz")
+                  "habla", "hablando")
 remove.hashtags <- c("congreso", "XV")
 remove.mentions <- c("congreso", "XV")
 
