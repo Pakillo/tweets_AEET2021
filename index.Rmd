@@ -308,7 +308,7 @@ Top words
 
 ```{r cloud_words, fig.width=8, fig.height=8}
 wordcloud(tweets, "words", remove = remove.words, 
-          min_count = 5, min_size = 1, max_words = 100)
+          min_count = 5, min_size = 0.5, max_words = 100)
 ```
 
 ### Wordcloud {.no-title .mobile}
