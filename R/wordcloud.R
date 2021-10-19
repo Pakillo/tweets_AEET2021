@@ -8,6 +8,7 @@ wordcloud <- function(df, show, remove, ...) {
   if (show == "words") {
     vec <- df$text
     vec <- stringr::str_remove_all(vec, pattern = "\\B@\\w+") # remove twitter handles from wordcloud
+    vec <- stringr::str_remove_all(vec, pattern = "\\B#\\w+") # remove hashtags
     toremove <- c(toremove,
                   "amp")
   }
