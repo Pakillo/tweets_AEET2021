@@ -315,7 +315,7 @@ wordcloud(tweets, "words", remove = remove.words,
 
 ```{r cloud_words_mob}
 wordcloud(tweets, "words", remove = remove.words, 
-          min_count = 5, min_size = 0.1, max_size = 2, max_words = 30)
+          min_count = 5, min_size = 0.1, max_size = 1, max_words = 60)
 ```
 
 
